@@ -6,6 +6,9 @@
 - [ ] PUT
 - [ ] POST
 - [ ] DELETE
+- [ ] PATCH
+- [ ] CONNECT
+- [ ] TRACE
 - [ ] optional errors
 - [ ] file uploads
 - [ ] FormData

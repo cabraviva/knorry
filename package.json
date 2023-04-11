@@ -4,9 +4,10 @@
   "description": "The most lightweight pure esm browser only http client you could get 🚀",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
+    "build": "tsc && uglifyjs -o dist/main.js --compress --mangle -- dist/main.js",
     "prepublishOnly": "npm run build"
   },
   "repository": {
@@ -29,6 +30,7 @@
   "homepage": "https://github.com/greencoder001/knorry#readme",
   "devDependencies": {
     "@types/node": "^18.15.11",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "uglify-js": "^3.17.4"
   }
 }
