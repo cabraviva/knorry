@@ -1,0 +1,34 @@
+{
+  "name": "knorry",
+  "version": "0.0.0",
+  "description": "The most lightweight pure esm browser only http client you could get 🚀",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/greencoder001/knorry.git"
+  },
+  "keywords": [
+    "xhr",
+    "http",
+    "ajax",
+    "promise",
+    "https",
+    "fetch"
+  ],
+  "author": "Green_Lab",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/greencoder001/knorry/issues"
+  },
+  "homepage": "https://github.com/greencoder001/knorry#readme",
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "typescript": "^5.0.4"
+  }
+}

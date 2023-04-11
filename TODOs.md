@@ -1,0 +1,14 @@
+- [ ] Tests
+- [ ] Test Coverage
+- [ ] GET
+- [ ] HEAD
+- [ ] OPTIONS
+- [ ] PUT
+- [ ] POST
+- [ ] DELETE
+- [ ] optional errors
+- [ ] file uploads
+- [ ] FormData
+- [ ] Utility methods like .wasSuccessful()
+- [ ] Bundle over CDN
+- [ ] knorry-full -> Node compatible + commonjs support

@@ -9,5 +9,7 @@
 - 🪶 As lightweight as possible
 - ⚡ Pure ESM
 - 📦 Optimized for bundlers
+- 🤝 Promise based
+- ➡️ Automatically parses JSON
 - 👨‍💻 Nice developer experience
 - 🚀 Extremely good backwards [compatibility](https://caniuse.com/xhr2)
