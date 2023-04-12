@@ -29,11 +29,14 @@ This method is not recommended because it performs additional requests and doesn
 
 **When using node (Not recommended):**
 ```shell
-npm i knorry xmlhttprequest
+npm i knorry xmlhttprequest form-data urlsearchparams
 ```
 ```javascript
 const { defineKnorryOptions } = await import('knorry')
 const { XMLHttpRequest } = require('xmlhttprequest')
+global.FormData = require('form-data')
+global.Blob = class Blob {}
+global.URLSearchParams = require('urlsearchparams')
 defineKnorryOptions({
     XHRClass: XMLHttpRequest
 })
