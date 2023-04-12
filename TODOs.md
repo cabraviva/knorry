@@ -1,17 +1,17 @@
 - [ ] Tests
 - [ ] Test Coverage
-- [ ] GET
+- [X] GET
 - [ ] HEAD
 - [ ] OPTIONS
 - [ ] PUT
-- [ ] POST
+- [X] POST
 - [ ] DELETE
 - [ ] PATCH
 - [ ] CONNECT
 - [ ] TRACE
 - [ ] optional errors
-- [ ] file uploads
-- [ ] FormData
+- [ ] upload api (https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestUpload)
+- [ ] FormData (https://developer.mozilla.org/en-US/docs/Web/API/FormData)
 - [ ] Utility methods like .wasSuccessful()
-- [ ] Bundle over CDN
-- [ ] knorry-full -> Node compatible + commonjs support
+- [ ] Fetch support
+- [ ] Data (req.body)
