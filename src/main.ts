@@ -253,7 +253,7 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
 /* @__PURE__ */ function execXHR(method: HTTPMethod, sendData: boolean, url: string, options?: RequestOptions, data?: RequestData): Promise<KnorryResponse> {
     return new Promise(function (resolve, promiseReject) {
         // Merge options
-        options = mergeObject(namespace().__knorry__.options, options || {})
+        options = mergeObject((namespace().__knorry__ || {}).options || {}, options || {})
 
         var reject: Function
         if (typeof options.errorHandler === 'function') {
@@ -294,8 +294,43 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
         }
         xhr.withCredentials = options.withCredentials
 
+        var response: KnorryResponse
+
+        // Load event
+        xhr.addEventListener('load', function () {
+            // XHR was successfull
+            // Parse headers
+            const respHeaders = parseResponseHeaders(xhr.getAllResponseHeaders())
+
+            // Content-Type specific data
+            var data: any = xhr.responseText
+            if (respHeaders['content-type'] && respHeaders['content-type'] === 'application/json') {
+                try {
+                    data = JSON.parse(data)
+                } catch (_) { }
+            }
+
+
+            // Create response
+            response = createKnorryResponse({
+                knorryError: false,
+                data,
+                headers: respHeaders,
+                status: xhr.status,
+                statusText: xhr.statusText,
+                serverError: xhr.status >= 500 && xhr.status < 600,
+                successfull: xhr.status >= 200 && xhr.status < 300,
+                clientError: xhr.status >= 400 && xhr.status < 500
+            })
+
+            resolve(response)
+        })
+
+        // Open request
+        xhr.open(method, url, true, (options.auth || {}).username, (options.auth || {}).password)
+
         // Headers
-        var headers = options.headers || {} 
+        var headers = options.headers || {}
         var headerNames = Object.keys(headers)
         for (var i = 0; i <= headerNames.length; i += 1) {
             xhr.setRequestHeader(headerNames[i], headers[headerNames[i]])
@@ -384,41 +419,6 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
                 xhr.setRequestHeader('Content-Type', contentType)
             }
         }
-
-        var response: KnorryResponse
-
-        // Load event
-        xhr.addEventListener('load', function () {
-            // XHR was successfull
-            // Parse headers
-            const respHeaders = parseResponseHeaders(xhr.getAllResponseHeaders())
-
-            // Content-Type specific data
-            var data: any = xhr.responseText
-            if (respHeaders['content-type'] && respHeaders['content-type'] === 'application/json') {
-                try {
-                    data = JSON.parse(data)
-                } catch (_) { }
-            }
-
-
-            // Create response
-            response = createKnorryResponse({
-                knorryError: false,
-                data,
-                headers: respHeaders,
-                status: xhr.status,
-                statusText: xhr.statusText,
-                serverError: xhr.status >= 500 && xhr.status < 600,
-                successfull: xhr.status >= 200 && xhr.status < 300,
-                clientError: xhr.status >= 400 && xhr.status < 500
-            })
-
-            resolve(response)
-        })
-
-        // Open request
-        xhr.open(method, url, true, (options.auth || {}).username, (options.auth || {}).password)
 
         // Before send
         if (typeof options.beforeSend === 'function') {
