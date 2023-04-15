@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knorry Playground</title>
+</head>
+<body>
+    <script type="module">
+        import * as knorryObj from './knorry.js'
+        import { get, post, knorry } from './knorry.js'
+        window.knorryObj = knorryObj
+        window.knorry = knorry
+        window.get = get
+        window.post = post
+    </script>
+    
+    <!--
+        Run using "npm run playground"
+        and open http://localhost:4560/playground.html
+    -->
+</body>
+</html>

@@ -12,6 +12,6 @@
 - [ ] optional errors
 - [ ] upload api (https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestUpload)
 - [ ] FormData (https://developer.mozilla.org/en-US/docs/Web/API/FormData)
-- [ ] Utility methods like .wasSuccessful()
 - [ ] Fetch support
 - [ ] Data (req.body)
+- [ ] disableEasyMode() -> doesn't pretend to be a primitive

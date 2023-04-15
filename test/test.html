@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knorry Tests</title>
+</head>
+<body>
+    <!--
+        For testing, use Live Server extension
+        (Press Go Live button to run the tests!)
+    -->
+
+    <h1>As all other test frameworks are too heavy and aren't easy to configure, here's one!</h1>
+    <h2 id="teststat"></h2>
+
+
+    <pre id="tests"></pre>
+
+    <script src="./test-engine.js"></script>
+
+    <script type="module">
+        import * as knorryObj from './knorry.js'
+        import { get } from './knorry.js'
+
+        expression(knorryObj.default === knorryObj.knorry).as('Default export')
+        expect(async () => {
+            const data = await get('http://localhost:4560/jsonresp')
+
+            // Check some more things
+            expression(!!data.$res).as('Does .$res exist on objects')
+
+            return data.worked
+        }).as('.get() request #1 + JSON')
+        expect(async () => {
+                const data = await get('http://localhost:4560/jsonarrayresp')
+
+                // Check some more things
+                expression(!!data.$res).as('Does .$res exist on arrays')
+
+                return data[0] && data.length === 1
+            }).as('.get() request #2 + JSON')
+        expect(async () => {
+            const data = await get('http://localhost:4560/textresp')
+
+            // Check some more things
+            expression(!!data.$res).as('Does .$res exist on strings')
+
+            return data.toString() === '!!TEST_TEXT!!'
+        }).as('.get() request #3 + TEXT')
+    </script>
+</body>
+</html>

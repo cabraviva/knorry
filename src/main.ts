@@ -304,7 +304,7 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
 
             // Content-Type specific data
             var data: any = xhr.responseText
-            if (respHeaders['content-type'] && respHeaders['content-type'] === 'application/json') {
+            if (respHeaders['content-type'] && respHeaders['content-type'].includes('application/json')) {
                 try {
                     data = JSON.parse(data)
                 } catch (_) { }
@@ -436,11 +436,11 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
     })
 }
 
-/* @__PURE__ */ function get (url: string, options?: RequestOptions): Promise<KnorryResponse> {
+function get (url: string, options?: RequestOptions): Promise<KnorryResponse> {
     return execXHR('GET', false, url, options)
 }
 
-/* @__PURE__ */ function post (url: string, data?: RequestData, options?: RequestOptions): Promise<KnorryResponse> {
+function post (url: string, data?: RequestData, options?: RequestOptions): Promise<KnorryResponse> {
     return execXHR('GET', true, url, options, data)
 }
 
@@ -454,7 +454,7 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
  * request, such as headers
  * @returns A Promise that resolves either with a primitive type containing the full response as the $res property or undefined
  */
-export default /* @__PURE__ */ async function knorry(method: HTTPMethod, url: string, data?: RequestData, options?: RequestOptions): Promise<KnorryResponse> {
+export default async function knorry(method: HTTPMethod, url: string, data?: RequestData, options?: RequestOptions): Promise<KnorryResponse> {
     return new Promise(function(resolve, reject) {
         switch (method.toUpperCase()) {
             case 'GET':
@@ -547,9 +547,9 @@ function useFetch (fetchFunction: Function): void {
 }
 
 export {
-    /* @__PURE__ */ get,
-    /* @__PURE__ */ post,
+    get,
+    post,
     defineKnorryOptions,
     useFetch,
-    /* @__PURE__ */ knorry
+    knorry
 }
