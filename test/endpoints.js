@@ -4,6 +4,27 @@ import esMain from 'es-main'
 import { fileURLToPath } from 'node:url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+import basicAuth from 'basic-auth'
+
+const USERNAME = 'gunnar'
+const PASSWORD = 'gneg'
+
+const auth = (req, res, next) => {
+    const user = basicAuth(req)
+
+    // Check if the user is authenticated
+    if (!user || user.name.toString('utf8').trim() !== USERNAME || user.pass.toString('utf8').trim() !== PASSWORD) {
+        // Send a 401 Unauthorized response
+        console.log(req.headers.Authorization)
+        res.set('WWW-Authenticate', 'Basic realm="Authentication Required"');
+        res.status(401);
+        res.send(false)
+        return;
+    }
+
+    // User is authenticated
+    next();
+}
 
 export default function applyRoutes(app, fn = () => {}) {
     // Test json endpoint
@@ -12,6 +33,11 @@ export default function applyRoutes(app, fn = () => {}) {
             worked: true
         })
         fn()
+    })
+
+    app.get('/auth', auth, (req, res) => {
+        // Send a true response indicating successful authentication
+        res.send(true)
     })
 
     app.get('/echoheaders', (req, res) => {

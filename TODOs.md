@@ -14,4 +14,4 @@
 - [ ] FormData (https://developer.mozilla.org/en-US/docs/Web/API/FormData)
 - [ ] Fetch support
 - [ ] Data (req.body)
-- [ ] disableEasyMode() -> doesn't pretend to be a primitive
+- [ ] options.easyMode -> doesn't pretend to be a primitive

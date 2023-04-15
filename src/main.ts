@@ -227,6 +227,16 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
         }
         // @ts-expect-error No worries, it won't be undefined
         ret.$res = obj
+    } else if (typeof obj.data === 'boolean') {
+        // @ts-expect-error: Properties will be added below
+        ret = new Boolean(obj.data)
+        var keys: Array<any> = Object.keys(obj)
+        for (var i: number = 0; i < keys.length; i += 1) {
+            // @ts-expect-error: We will write to it anyways
+            ret[keys[i]] = obj[keys[i]]
+        }
+        // @ts-expect-error No worries, it won't be undefined
+        ret.$res = obj
     } else {
         // Object or Array
         ret = obj.data
@@ -241,7 +251,7 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
     if (!headersString.trim()) {
         return headers;
     }
-    headersString.trim().split('\r\n').forEach((header) => {
+    headersString.trim().split('\r\n').forEach(function (header) {
         const index = header.indexOf(':')
         const key = header.substring(0, index).trim().toLowerCase()
         const value = header.substring(index + 1).trim()
@@ -327,7 +337,22 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
         })
 
         // Open request
-        xhr.open(method, url, true, (options.auth || {}).username, (options.auth || {}).password)
+        xhr.open(method, url, true)
+
+        let lbtoa
+        try {
+            lbtoa = btoa
+        } catch {
+            lbtoa = function (str: string) {
+                return Buffer.from(str).toString('base64')
+            }
+        }
+
+        // HTTP Basic Auth
+        if (options.auth && typeof options.auth === 'object' && typeof options.auth.username === 'string' && typeof options.auth.password === 'string') {
+            const encodedCredentials = lbtoa(`${options.auth.username}:${options.auth.password}`)
+            xhr.setRequestHeader('Authorization', 'Basic ' + encodedCredentials)
+        }
 
         // Headers
         var headers = options.headers || {}

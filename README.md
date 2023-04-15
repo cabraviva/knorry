@@ -48,3 +48,59 @@ defineKnorryOptions({
 })
 ```
 This method is not recommended because it doesn't supports all features and you aren't in need of a lightweight client in nodejs. Use a more robust client like [axios](https://npmjs.com/package/axios) instead
+
+# Some things to keep in mind when using knorry
+## Easy mode
+By default knorry will use easy mode, which you can disable like this:
+```js
+import { defineKnorryConfig, get } from 'knorry'
+defineKnorryConfig({
+    easyMode: false
+})
+
+// Or temporarily disable it for one request
+await get('example.com', {
+    easyMode: false
+})
+```
+Easy mode will not directly return the response, but rather return the data containing the full response on the $res property. This will work using the constructor of a primitive type like String:
+```js
+await get('example-api.com') // -> String {'response', $res: ...}
+await get('example-api.com', { easyMode: false }) // -> {data: 'response', ...}
+```
+It is implemented like this because it's much cleaner to write:
+```svelte
+<!-- Svelte file for demonstration -->
+<script>
+import { get } from 'knorry'
+</script>
+<main>
+Hello, {await get('/whoami')}
+</main>
+```
+than having to wrap every request in parentheses:
+```svelte
+<!-- Svelte file for demonstration -->
+<script>
+import { get, defineKnorryOptions } from 'knorry'
+defineKnorryOptions({
+    easyMode: false
+})
+</script>
+<main>
+Hello, {(await get('/whoami')).data}
+</main>
+```
+
+However this has some flaws, like equality & type checking. Here are some instructions teaching you what works and what doesn't:
+```js
+import { get } from 'knorry'
+
+// 💩
+await get('/whoami') === 'username'
+typeof await get('/whoami') === 'string'
+
+// 👌
+await get('/whoami') == 'username'
+await get('/whoami') instanceof String
+```
