@@ -68,15 +68,23 @@ app.listen(4560, async () => {
     await sleep(500)
 
     let done = false
-    process.stdout.write('Test Status: ')
+    try {
+        process.stdout.cursorTo(0)
+        process.stdout.write('Test Status: ')
+    } catch {}
+    
     while (!done) {
         const h2 = await page.$('#teststat')
         const h2p = await h2.getProperty('innerText')
         const teststat = await h2p.jsonValue()
 
-        process.stdout.cursorTo(14)
-        process.stdout.clearLine(1)
-        process.stdout.write(teststat)
+        try {
+            process.stdout.cursorTo(14)
+            process.stdout.clearLine(1)
+            process.stdout.write(teststat)
+        } catch {
+            console.log(teststat)
+        }
 
         if (teststat.startsWith('❌')) {
             // At least one test failed!
