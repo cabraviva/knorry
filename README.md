@@ -1,4 +1,5 @@
-[![Tests](https://github.com/greencoder001/knorry/actions/workflows/test.yaml/badge.svg)](https://github.com/greencoder001/knorry/actions/workflows/test.yaml)
+[[![Tests](https://github.com/greencoder001/knorry/actions/workflows/test.yaml/badge.svg?event=push)](https://github.com/greencoder001/knorry/actions/workflows/test.yaml)](https://img.shields.io/github/actions/workflow/status/greencoder001/knorry/test.yaml?style=for-the-badge)
+
 
 # knorry
  The most lightweight pure esm browser only http client you could get 🚀
