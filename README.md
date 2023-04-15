@@ -18,7 +18,7 @@
 - 🤝 Promise based
 - ➡️ Automatically parses JSON
 - 👨‍💻 Splendid developer experience
-- 🚀 Extremely good backwards [compatibility](https://caniuse.com/es6) (~97%)
+- 🚀 Extremely good [compatibility](/COMPATIBILITY.md) (~98.4%)
 
 # Installation
 **With a module bundler:**

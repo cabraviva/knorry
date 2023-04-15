@@ -285,6 +285,16 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
 }
 
 /* @__PURE__ */ function execXHR(method: HTTPMethod, sendData: boolean, url: string, options?: RequestOptions, data?: RequestData): Promise<KnorryResponse> {
+    var Blib
+    try {
+        // @ts-expect-error
+        Blib = Blob || function () {}
+    } catch {
+        Blib = function () {}
+    }
+    // @ts-expect-error
+    var Blob: Blob = Blib
+    
     return new Promise(function (resolve, promiseReject) {
         // Merge options
         options = mergeObject((namespace().__knorry__ || {}).options || {}, options || {})
