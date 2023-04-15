@@ -289,7 +289,7 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
     try {
         // @ts-expect-error
         Blib = Blob || function () {}
-    } catch {
+    } catch (_) {
         Blib = function () {}
     }
     // @ts-expect-error
@@ -376,7 +376,7 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
         let lbtoa
         try {
             lbtoa = btoa
-        } catch {
+        } catch (_) {
             lbtoa = function (str: string) {
                 return Buffer.from(str).toString('base64')
             }
