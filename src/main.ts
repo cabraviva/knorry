@@ -8,6 +8,10 @@ interface JSONObject {
      * This will include the complete response without pretending to be a different type
      */
     $res: KnorryResponseObj,
+    /**
+     * Returns the plain response data
+     */
+    $plain(): object
     [key: string | number | symbol]: any
 }
 
@@ -22,11 +26,11 @@ interface NumberResponse extends Number, KnorryResponseObj {
     /**
      * Returns the plain response so the typeof operator works again. Also thruthy & falsy will work again
      */
-    plain(): string
+    $plain(): number
 }
 
 /**
- * Response from a http request. Acts & can be used like a string including the data
+ * Response from a http request. Acts & can be used like an array including the data
  */
 interface ArrayResponse extends Array<any> {
     /**
@@ -36,7 +40,7 @@ interface ArrayResponse extends Array<any> {
     /**
      * Returns the plain response so the typeof operator works again
      */
-    plain(): string
+    $plain(): any[]
 }
 
 /**
@@ -110,7 +114,21 @@ interface PlainTextResponse extends String, KnorryResponseObj {
     /**
      * Returns the plain response so the typeof operator works again
      */
-    plain(): string
+    $plain(): string
+}
+
+/**
+ * Response from a http request. Acts & can be used like a boolean including the data
+ */
+interface BooleanResponse extends Boolean, KnorryResponseObj {
+    /**
+     * This will include the complete response without pretending to be a different type
+     */
+    $res: KnorryResponseObj,
+    /**
+     * Returns the plain response so the typeof operator works again
+     */
+    $plain(): boolean
 }
 
 interface GlobalThis extends Global, Window {
@@ -122,7 +140,7 @@ interface GlobalThis extends Global, Window {
 /**
  * Response from a http request. Can either be a string or any valid JSON type
  */
-type KnorryResponse = PlainTextResponse | JSONObject | NumberResponse | undefined | ArrayResponse
+type KnorryResponse = PlainTextResponse | JSONObject | NumberResponse | undefined | ArrayResponse | BooleanResponse
 
 type RequestData = URLSearchParams | Blob | FormData | Object | null | undefined | string | boolean | number
 
@@ -203,6 +221,7 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
 /* END TYPES */
 
 /* @__PURE__ */ function createKnorryResponse (obj: KnorryResponseObj): KnorryResponse {
+    // @ts-expect-error
     var ret: KnorryResponse = { $res: obj }
 
     if (typeof obj.data === 'undefined') {
@@ -241,6 +260,11 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
         // Object or Array
         ret = obj.data
         ret.$res = obj
+    }
+
+    // @ts-expect-error: It's not
+    ret.$plain = function () {
+        return obj.data
     }
 
     return ret
@@ -466,7 +490,7 @@ function get (url: string, options?: RequestOptions): Promise<KnorryResponse> {
 }
 
 function post (url: string, data?: RequestData, options?: RequestOptions): Promise<KnorryResponse> {
-    return execXHR('GET', true, url, options, data)
+    return execXHR('POST', true, url, options, data)
 }
 
 /**
@@ -484,8 +508,10 @@ export default async function knorry(method: HTTPMethod, url: string, data?: Req
         switch (method.toUpperCase()) {
             case 'GET':
                 get(url, options).then(resolve).catch(reject)
+                break
             case 'POST':
                 post(url, data, options).then(resolve).catch(reject)
+                break
             case 'HEAD':
                 break
             case 'OPTIONS':
@@ -502,19 +528,7 @@ export default async function knorry(method: HTTPMethod, url: string, data?: Req
                 break
             default:
                 throw new TypeError('method must be a valid HTTPMethod')
-                break
         }
-        return resolve(createKnorryResponse({
-            knorryError: false,
-            errorMsg: 'Invalid Method',
-            data: 'See errorMsg!',
-            status: 400,
-            statusText: 'Bad Request',
-            headers: {},
-            serverError: false,
-            clientError: false,
-            successful: false
-        }))
     })
 }
 

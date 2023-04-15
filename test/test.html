@@ -22,7 +22,8 @@
 
     <script type="module">
         import * as knorryObj from './knorry.js'
-        import { get, defineKnorryOptions, post } from './knorry.js'
+        import { get, defineKnorryOptions, post, useFetch } from './knorry.js'
+        import knorry from './knorry.js'
 
         expression(knorryObj.default === knorryObj.knorry).as('Default export')
         expect(async () => {
@@ -67,6 +68,9 @@
             expression(data.$res.statusText === 'OK').as('.$res.statusText')
             expression(!!data.$res.successful).as('.$res.successful')
             expression(data.$res.headers['x-powered-by'] === 'Express').as('X-Powered-By Express Header')
+
+            expression(data.$plain() === '!!TEST_TEXT!!', '$plain #1')
+            expression(data !== '!!TEST_TEXT!!', '$plain #2')
 
             return data.toString() === '!!TEST_TEXT!!'
         }).as('.get() request #3 + TEXT')
@@ -175,6 +179,17 @@
             })
             return res.$res.status !== 401
         }).as('auth should work')
+
+        expect(async () => {
+            return (await knorry('GET', '/bool')).$plain()
+        }).as('knorry func should work #1')
+        expect(async () => {
+            return (await knorry('POST', '/json')).value
+        }).as('knorry func should work #2')
+
+        expect(async () => {
+            return (await post('/json')).value
+        }).as('.post() #1 + JSON')
     </script>
 </body>
 </html>

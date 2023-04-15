@@ -99,8 +99,10 @@ import { get } from 'knorry'
 // 💩
 await get('/whoami') === 'username'
 typeof await get('/whoami') === 'string'
+!!await get('/returns-false') // -> true
 
 // 👌
 await get('/whoami') == 'username'
 await get('/whoami') instanceof String
+!!(await get('/returns-false')).$plain() // -> false
 ```

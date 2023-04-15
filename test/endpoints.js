@@ -40,6 +40,16 @@ export default function applyRoutes(app, fn = () => {}) {
         res.send(true)
     })
 
+    app.post('/json', (req, res) => {
+        res.send({
+            value: true
+        })
+    })
+
+    app.get('/bool', (req, res) => {
+        res.send(true)
+    })
+
     app.get('/echoheaders', (req, res) => {
         res.send(req.headers)
         fn()
