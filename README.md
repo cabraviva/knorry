@@ -1,5 +1,8 @@
-[[![Tests](https://github.com/greencoder001/knorry/actions/workflows/test.yaml/badge.svg?event=push)](https://github.com/greencoder001/knorry/actions/workflows/test.yaml)](https://img.shields.io/github/actions/workflow/status/greencoder001/knorry/test.yaml?style=for-the-badge)
-
+![Test](https://img.shields.io/github/actions/workflow/status/greencoder001/knorry/test.yaml?style=for-the-badge)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/knorry?color=bright-green&label=Full%20bundle%20minzipped%3A&style=for-the-badge)
+![GitHub](https://img.shields.io/github/license/greencoder001/knorry?color=bright-green&style=for-the-badge)
+![npm](https://img.shields.io/npm/dw/knorry?style=for-the-badge)
+![npm](https://img.shields.io/npm/v/knorry?label=Version&style=for-the-badge)
 
 # knorry
  The most lightweight pure esm browser only http client you could get 🚀
