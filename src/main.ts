@@ -92,7 +92,7 @@ interface KnorryResponseObj {
      * Represents wether the status code indicates that the request was successful or not.
      * NOTE: This won't always be true if a knorryError occured
      */
-    successfull: boolean
+    successful: boolean
 }
 
 interface AnyObject {
@@ -298,7 +298,7 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
 
         // Load event
         xhr.addEventListener('load', function () {
-            // XHR was successfull
+            // XHR was successful
             // Parse headers
             const respHeaders = parseResponseHeaders(xhr.getAllResponseHeaders())
 
@@ -319,7 +319,7 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
                 status: xhr.status,
                 statusText: xhr.statusText,
                 serverError: xhr.status >= 500 && xhr.status < 600,
-                successfull: xhr.status >= 200 && xhr.status < 300,
+                successful: xhr.status >= 200 && xhr.status < 300,
                 clientError: xhr.status >= 400 && xhr.status < 500
             })
 
@@ -488,7 +488,7 @@ export default async function knorry(method: HTTPMethod, url: string, data?: Req
             headers: {},
             serverError: false,
             clientError: false,
-            successfull: false
+            successful: false
         }))
     })
 }

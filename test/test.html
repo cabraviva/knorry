@@ -12,7 +12,7 @@
         (Press Go Live button to run the tests!)
     -->
 
-    <h1>As all other test frameworks are too heavy and aren't easy to configure, here's one!</h1>
+    <h1>As all other test frameworks are too heavy and aren't easy to configure, so here's one!</h1>
     <h2 id="teststat"></h2>
 
 
@@ -22,7 +22,7 @@
 
     <script type="module">
         import * as knorryObj from './knorry.js'
-        import { get } from './knorry.js'
+        import { get, defineKnorryOptions, post } from './knorry.js'
 
         expression(knorryObj.default === knorryObj.knorry).as('Default export')
         expect(async () => {
@@ -30,6 +30,13 @@
 
             // Check some more things
             expression(!!data.$res).as('Does .$res exist on objects')
+            expression(!data.$res.clientError).as('.$res.clientError')
+            expression(!data.$res.serverError).as('.$res.serverError')
+            expression(!data.$res.knorryError).as('.$res.knorryError')
+            expression(data.$res.status === 200).as('.$res.status')
+            expression(data.$res.statusText === 'OK').as('.$res.statusText')
+            expression(!!data.$res.successful).as('.$res.successful')
+            expression(data.$res.headers['x-powered-by'] === 'Express').as('X-Powered-By Express Header')
 
             return data.worked
         }).as('.get() request #1 + JSON')
@@ -38,6 +45,13 @@
 
                 // Check some more things
                 expression(!!data.$res).as('Does .$res exist on arrays')
+                expression(!data.$res.clientError).as('.$res.clientError')
+                expression(!data.$res.serverError).as('.$res.serverError')
+                expression(!data.$res.knorryError).as('.$res.knorryError')
+                expression(data.$res.status === 200).as('.$res.status')
+                expression(data.$res.statusText === 'OK').as('.$res.statusText')
+                expression(!!data.$res.successful).as('.$res.successful')
+                expression(data.$res.headers['x-powered-by'] === 'Express').as('X-Powered-By Express Header')
 
                 return data[0] && data.length === 1
             }).as('.get() request #2 + JSON')
@@ -46,9 +60,110 @@
 
             // Check some more things
             expression(!!data.$res).as('Does .$res exist on strings')
+            expression(!data.$res.clientError).as('.$res.clientError')
+            expression(!data.$res.serverError).as('.$res.serverError')
+            expression(!data.$res.knorryError).as('.$res.knorryError')
+            expression(data.$res.status === 200).as('.$res.status')
+            expression(data.$res.statusText === 'OK').as('.$res.statusText')
+            expression(!!data.$res.successful).as('.$res.successful')
+            expression(data.$res.headers['x-powered-by'] === 'Express').as('X-Powered-By Express Header')
 
             return data.toString() === '!!TEST_TEXT!!'
         }).as('.get() request #3 + TEXT')
+        expect(async () => {
+            const res = await get('/echoheaders', {
+                headers: {
+                    'X-My-Custom-header': 'yeah',
+                    server: 'teapot'
+                }
+            })
+            
+            return res.server === 'teapot' && res['x-my-custom-header'] === 'yeah'
+        }).as('Headers being applied')
+        expectError(async () => {
+            await get('/timeout-test', {
+                timeout: 2000
+            })
+        }).as('Timeout should work')
+        await expectError(async () => {
+            defineKnorryOptions({
+                timeout: 2000
+            })
+            await get('/timeout-test')
+        }).as('defineKnorryOptions')
+        defineKnorryOptions({})
+        expectError(async () => {
+            await get('/echoheaders', {
+                XHRClass: () => {}
+            })
+        }).as('XHRClass')
+        expect(async () => {
+            let passes = false
+            const res = await get('/jsonresp' , {
+                beforeSend: (xhr) => {
+                    passes = xhr instanceof XMLHttpRequest
+                }
+            })
+            return passes
+        }).as('beforeSend function')
+        expect(async () => {
+            let passes = false
+            const res = await get('/jsonresp', {
+                onProgress: (percentage) => {
+                    passes = percentage > 0
+                }
+            })
+            return passes
+        }).as('onProgress function')
+        expectNoError(async () => {
+            await get('http://longadressthatdefinetlydoesnotexist.io/nonavailableroute', {
+                errorHandler: (err, resolve) => {
+                    resolve()
+                }
+            })
+        }).as('errorHandler #1')
+        expect(async () => {
+            return await get('http://longadressthatdefinetlydoesnotexist.io/nonavailableroute', {
+                errorHandler: (err, resolve) => {
+                    resolve(true)
+                }
+            })
+        }).as('errorHandler #2')
+        expectError(async () => {
+                await get('http://longadressthatdefinetlydoesnotexist.io/nonavailableroute')
+        }).as('Invalid page (should throw an error)')
+        expectNoError(async () => {
+            await get('http://localhost:4560/serverroutethatdoesnotexist')
+        }).as('No error on 404')
+        expect(async () => {
+            let passes = false
+            await get('/jsonresp', {
+                beforeSend: (xhr) => {
+                    passes = xhr.withCredentials === true
+                },
+                withCredentials: true
+            })
+            return passes
+        }).as('withCredentials is set')
+        expect(async () => {
+                let passes = false
+                await get('/jsonresp', {
+                    beforeSend: (xhr) => {
+                        passes = xhr.withCredentials === true
+                    },
+                    withCredentials: false
+                })
+                return !passes
+            }).as('withCredentials is set')
+        expect(async () => {
+                let passes = false
+                await get('/jsonresp', {
+                    beforeSend: (xhr) => {
+                        passes = xhr.withCredentials === true
+                    }
+                })
+                return passes
+            }).as('withCredentials is set by default')
     </script>
 </body>
 </html>

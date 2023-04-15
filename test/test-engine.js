@@ -51,3 +51,36 @@ function expect (func) {
         }
     }
 }
+
+function expectError(func) {
+    return {
+        as: async (testName) => {
+            const clearTout = timeout(testName)
+            try {
+                await func()
+                writeTestResult('❌', testName, false)
+                clearTout()
+            } catch (err) {
+                writeTestResult('✅', testName, true)
+                clearTout()
+            }
+        }
+    }
+}
+
+function expectNoError(func) {
+    return {
+        as: async (testName) => {
+            const clearTout = timeout(testName)
+            try {
+                await func()
+                writeTestResult('✅', testName, true)
+                clearTout()
+            } catch (err) {
+                writeTestResult('❌', testName, false)
+                document.querySelector('#tests').innerText += `\nError: ${err}`
+                clearTout()
+            }
+        }
+    }
+}

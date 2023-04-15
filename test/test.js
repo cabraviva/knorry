@@ -11,7 +11,9 @@ import applyRoutes from './endpoints.js'
 
 // Count tests
 const htmlfile = fs.readFileSync(path.join(__dirname, 'test.html')).toString('utf8')
-const testCount = [...htmlfile.match(/expect\(/g), ...htmlfile.match(/expression\(/g)].length
+const testCount = [...htmlfile.match(/expect\(/g), ...htmlfile.match(/expectError\(/g), ...htmlfile.match(/expectNoError\(/g), ...htmlfile.match(/expression\(/g)].length
+
+let count = 0
 
 // Timeout
 const seconds = 60 * 5
@@ -41,7 +43,9 @@ app.get('favicon.ico', (req, res) => {
     res.send('')
 })
 
-applyRoutes(app)
+applyRoutes(app, () => {
+    count += 1
+})
 
 // Listen
 app.listen(4560, async () => {
@@ -56,13 +60,20 @@ app.listen(4560, async () => {
     const page = await browser.newPage()
     await page.goto(`http://localhost:4560`)
 
+    let consolebuffer = []
+    let consolebufferf = []
+
     page.on('requestfailed', request => {
-        console.log(chalk.red(`[FAILED REQUEST] url: ${request.url()}, errText: ${request.failure().errorText}, method: ${request.method()}`))
+        consolebufferf.push([chalk.red(`[FAILED REQUEST] url: ${request.url()}, errText: ${request.failure().errorText}, method: ${request.method()}`)])
     })
 
     page.on('console', async message => {
-        const args = await Promise.all(message.args().map(arg => arg.jsonValue()))
-        console.log('[CONSOLE]', ...args)
+        const args = await Promise.all(message.args().map(arg => {
+            return arg.jsonValue().catch(() => {
+                return arg.toString()
+            })
+        }))
+        if (args.join(' ').trim() !== '') consolebuffer.push(['[CONSOLE]', ...args])
     })
 
     await sleep(500)
@@ -98,22 +109,33 @@ app.listen(4560, async () => {
             const fulllog = await prep.jsonValue()
 
             console.log(fulllog)
+
+            for (const c of [...consolebuffer, ...consolebufferf]) {
+                console.log(...c)
+            }
             
             process.exit(1) 
         } else {
             const [completed, total] = teststat.split('/').map(v => v.replace(/✅/g, '').trim()).map(v => parseInt(v))
             if (total >= testCount) {
-                if (completed >= total) {
-                    console.log()
-                    console.log(chalk.green('✅ All tests were successful'))
-                    console.log(chalk.cyan('Full log:'))
-                    const pre = await page.$('#tests')
-                    const prep = await pre.getProperty('innerText')
-                    const fulllog = await prep.jsonValue()
 
-                    console.log(fulllog)
-                    process.exit(0)
-                }
+                    if (completed >= total) {
+                        console.log()
+                        console.log(chalk.green('✅ All tests were successful'))
+                        console.log(chalk.cyan('Full log:'))
+                        const pre = await page.$('#tests')
+                        const prep = await pre.getProperty('innerText')
+                        const fulllog = await prep.jsonValue()
+
+                        console.log(fulllog)
+
+                        for (const c of consolebuffer) {
+                            console.log(...c)
+                        }
+
+                        process.exit(0)
+                    }
+                    
             }
         }
 
