@@ -1,12 +1,16 @@
 ![Knorry](/logo.jpg)
 
+<div style="text-align: center;">
+
 ![Test](https://img.shields.io/github/actions/workflow/status/greencoder001/knorry/test.yaml?style=flat-square)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/knorry?color=bright-green&label=Full%20bundle%20minzipped%3A&style=flat-square)
 ![GitHub](https://img.shields.io/github/license/greencoder001/knorry?color=bright-green&style=flat-square)
 ![npm](https://img.shields.io/npm/dw/knorry?style=flat-square)
 ![npm](https://img.shields.io/npm/v/knorry?label=Version&style=flat-square)
 
-The most lightweight pure esm browser only http client you could get 🚀
+**The most lightweight pure esm browser only http client you could get 🚀**
+
+</div>
 
 # Why?
 - 🌳 Tree Shakable
