@@ -9,12 +9,19 @@
 <body>
     <script type="module">
         import * as knorryObj from './knorry.js'
-        import { get, post, knorry } from './knorry.js'
+        import { get, post, defineKnorryOptions, useFetch } from './knorry.js'
+        import knorry from './knorry.js'
         window.knorryObj = knorryObj
         window.knorry = knorry
         window.get = get
         window.post = post
+        window.defineKnorryOptions = defineKnorryOptions
+        window.useFetch = useFetch
     </script>
+
+    <h2 id="teststat"></h2>    
+    <pre id="tests"></pre>
+    <script src="./test-engine.js"></script>
     
     <!--
         Run using "npm run playground"

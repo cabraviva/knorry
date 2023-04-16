@@ -11,15 +11,21 @@ import applyRoutes from './endpoints.js'
 
 // Count tests
 const htmlfile = fs.readFileSync(path.join(__dirname, 'test.html')).toString('utf8')
-const testCount = [...htmlfile.match(/expect\(/g), ...htmlfile.match(/expectError\(/g), ...htmlfile.match(/expectNoError\(/g), ...htmlfile.match(/expression\(/g)].length
+const testnames = []
+htmlfile.replace(/\.as\(["'`](.*)["'`]\)/g, (_, testname) => {
+    testnames.push(testname.trim())
+    return ''
+})
+global.runTests = []
+const testCount = testnames.length
 
 let count = 0
 
 // Timeout
-const seconds = 60 * 5
+const seconds = 60 * 2
 const milis = seconds * 1000
 const minutes = seconds / 60
-const timeout = setTimeout(async () => {
+setTimeout(async () => {
     console.log(chalk.red(`⏱️ Timeout during tests!`))
     await global.printFullLogs()
     global.printConsoleBuffer()
@@ -105,6 +111,18 @@ app.listen(4560, async () => {
         const h2 = await page.$('#teststat')
         const h2p = await h2.getProperty('innerText')
         const teststat = await h2p.jsonValue()
+
+        const pre = await page.$('#tests')
+        const prep = await pre.getProperty('innerText')
+        const fulllog = await prep.jsonValue()
+        for (const f of fulllog.split('\n')) {
+            for (const n of testnames) {
+                if (f.includes(n)) {
+                    global.runTests.push(n)
+                    global.runTests = [...new Set(global.runTests)]
+                }
+            }
+        }
 
         try {
             process.stdout.cursorTo(14)

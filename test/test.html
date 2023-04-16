@@ -94,64 +94,66 @@
                 timeout: 2000
             })
             await get('/timeout-test')
+            defineKnorryOptions({
+                timeout: 0
+            })
         }).as('defineKnorryOptions')
-        defineKnorryOptions({
-            timeout: 0
-        })
-        expectError(async () => {
-            await get('/echoheaders', {
-                XHRClass: () => {}
-            })
-        }).as('XHRClass')
-        expect(async () => {
-            let passes = false
-            const res = await get('/jsonresp' , {
-                beforeSend: (xhr) => {
-                    passes = xhr instanceof XMLHttpRequest
-                }
-            })
-            return passes
-        }).as('beforeSend function')
-        expect(async () => {
-            let passes = false
-            const res = await get('/jsonresp', {
-                onProgress: (percentage) => {
-                    passes = percentage > 0
-                }
-            })
-            return passes
-        }).as('onProgress function')
-        expectNoError(async () => {
-            await get('http://longadressthatdefinetlydoesnotexist.io/nonavailableroute', {
-                errorHandler: (err, resolve) => {
-                    resolve()
-                }
-            })
-        }).as('errorHandler #1')
-        expect(async () => {
-            return await get('http://longadressthatdefinetlydoesnotexist.io/nonavailableroute', {
-                errorHandler: (err, resolve) => {
-                    resolve(true)
-                }
-            })
-        }).as('errorHandler #2')
-        expectError(async () => {
+
+        setTimeout(() => {
+            expectError(async () => {
+                await get('/echoheaders', {
+                    XHRClass: () => { }
+                })
+            }).as('XHRClass')
+            expect(async () => {
+                let passes = false
+                const res = await get('/jsonresp', {
+                    beforeSend: (xhr) => {
+                        passes = xhr instanceof XMLHttpRequest
+                    }
+                })
+                return passes
+            }).as('beforeSend function')
+            expect(async () => {
+                let passes = false
+                const res = await get('/jsonresp', {
+                    onProgress: (percentage) => {
+                        passes = percentage > 0
+                    }
+                })
+                return passes
+            }).as('onProgress function')
+            expectNoError(async () => {
+                await get('http://longadressthatdefinetlydoesnotexist.io/nonavailableroute', {
+                    errorHandler: (err, resolve) => {
+                        resolve()
+                    }
+                })
+            }).as('errorHandler #1')
+            expect(async () => {
+                return await get('http://longadressthatdefinetlydoesnotexist.io/nonavailableroute', {
+                    errorHandler: (err, resolve) => {
+                        resolve(true)
+                    }
+                })
+            }).as('errorHandler #2')
+            expectError(async () => {
                 await get('http://longadressthatdefinetlydoesnotexist.io/nonavailableroute')
-        }).as('Invalid page (should throw an error)')
-        expectNoError(async () => {
-            await get('http://localhost:4560/serverroutethatdoesnotexist')
-        }).as('No error on 404')
-        expect(async () => {
-            let passes = false
-            await get('/jsonresp', {
-                beforeSend: (xhr) => {
-                    passes = xhr.withCredentials === true
-                },
-                withCredentials: true
-            })
-            return passes
-        }).as('withCredentials is set')
-        expect(async () => {
+            }).as('Invalid page (should throw an error)')
+            expectNoError(async () => {
+                await get('http://localhost:4560/serverroutethatdoesnotexist')
+            }).as('No error on 404')
+            expect(async () => {
+                let passes = false
+                await get('/jsonresp', {
+                    beforeSend: (xhr) => {
+                        passes = xhr.withCredentials === true
+                    },
+                    withCredentials: true
+                })
+                return passes
+            }).as('withCredentials is set')
+            expect(async () => {
                 let passes = false
                 await get('/jsonresp', {
                     beforeSend: (xhr) => {
@@ -161,7 +163,7 @@
                 })
                 return !passes
             }).as('withCredentials is set')
-        expect(async () => {
+            expect(async () => {
                 let passes = false
                 await get('/jsonresp', {
                     beforeSend: (xhr) => {
@@ -170,26 +172,30 @@
                 })
                 return passes
             }).as('withCredentials is set by default')
-        expect(async () => {
-            const res = await get('/auth', {
-                auth: {
-                    username: 'gunnar',
-                    password: 'gneg'
-                }
-            })
-            return res.$res.status !== 401
-        }).as('auth should work')
+            expect(async () => {
+                const res = await get('/auth', {
+                    auth: {
+                        username: 'gunnar',
+                        password: 'gneg'
+                    }
+                })
+                return res.$res.status !== 401
+            }).as('auth should work')
 
-        expect(async () => {
-            return (await knorry('GET', '/bool')).$plain()
-        }).as('knorry func should work #1')
-        expect(async () => {
-            return (await knorry('POST', '/json')).value
-        }).as('knorry func should work #2')
+            expect(async () => {
+                return (await knorry('GET', '/bool')).$plain()
+            }).as('knorry func should work #1')
 
-        expect(async () => {
-            return (await post('/json')).value
-        }).as('.post() #1 + JSON')
+            expect(async () => {
+                const v = (await knorry('POST', '/json')).value
+                return v
+            }).as('knorry func should work #2')
+
+            expect(async () => {
+                const v = (await post('/json')).value
+                return v
+            }).as('.post() #1 + JSON')
+        }, 3000)
     </script>
 </body>
 </html>
