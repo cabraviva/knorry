@@ -1,6 +1,6 @@
 ![Knorry](/logo.jpg)
 
-<center>
+<center align="center">
 
 ![Test](https://img.shields.io/github/actions/workflow/status/greencoder001/knorry/test.yaml?style=flat-square)
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/knorry?color=bright-green&label=Full%20bundle%20minzipped%3A&style=flat-square)
