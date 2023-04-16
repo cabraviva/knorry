@@ -1,6 +1,6 @@
 {
   "name": "knorry",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "The most lightweight pure esm browser only http client you could get 🚀",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
