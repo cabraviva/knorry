@@ -19,8 +19,10 @@ let count = 0
 const seconds = 60 * 5
 const milis = seconds * 1000
 const minutes = seconds / 60
-const timeout = setTimeout(() => {
+const timeout = setTimeout(async () => {
     console.log(chalk.red(`⏱️ Timeout during tests!`))
+    await global.printFullLogs()
+    global.printConsoleBuffer()
     process.exit(1)
 }, milis)
 
@@ -60,8 +62,23 @@ app.listen(4560, async () => {
     const page = await browser.newPage()
     await page.goto(`http://localhost:4560`)
 
+    global.printFullLogs = async () => {
+        console.log(chalk.cyan('Full log:'))
+        const pre = await page.$('#tests')
+        const prep = await pre.getProperty('innerText')
+        const fulllog = await prep.jsonValue()
+
+        console.log(fulllog)
+    }
+
     let consolebuffer = []
     let consolebufferf = []
+
+    global.printConsoleBuffer = () => {
+        for (const c of [...consolebuffer, ...consolebufferf]) {
+            console.log(...c)
+        }
+    }
 
     page.on('requestfailed', request => {
         consolebufferf.push([chalk.red(`[FAILED REQUEST] url: ${request.url()}, errText: ${request.failure().errorText}, method: ${request.method()}`)])
