@@ -428,10 +428,12 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
                         // @ts-expect-error
                         finalData = data
                     } else {
-                        if (typeof data === 'number' || typeof data === 'boolean') data = JSON.stringify(data)
+                        if (typeof data === 'number' || typeof data === 'boolean') {
+                            data = JSON.stringify(data)
+                        }
                         if (typeof data === 'object' && !(data instanceof FormData || data instanceof URLSearchParams || data instanceof Blob)) {
                             if (typeof options.dataType === 'string') {
-
+                                
                             }
                         }
                         // @ts-expect-error
@@ -454,9 +456,12 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
                             }
                             // @ts-expect-error
                             finalData = data
+                            contentType = 'multipart/formdata'
                         } else if (options.dataType === 'json') {
+                            contentType = 'application/json; charset=utf8'
                             finalData = JSON.stringify(data)
                         } else if (options.dataType === 'urlencoded') {
+                            contentType = 'application/x-www-form-urlencoded'
                             // @ts-expect-error
                             finalData = new URLSearchParams(data)
                         } else {
@@ -464,7 +469,8 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
                         }
                     } else {
                         if (!(data instanceof FormData || data instanceof URLSearchParams || data instanceof Blob)) {
-                            return reject(new Error('options.dataType must be set'))
+                            finalData = JSON.stringify(data)
+                            contentType = 'application/json; charset=utf8'
                         } else {
                             // No hint, but instanceof supported type
                             finalData = data
@@ -474,7 +480,10 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
                         }
                     }
                 }
-                if (typeof data === 'number' || typeof data === 'boolean') data = JSON.stringify(data)
+                if (typeof data === 'number' || typeof data === 'boolean') {
+                    data = JSON.stringify(data)
+                    contentType = 'application/json; charset=utf8'
+                }
                 xhr.setRequestHeader('Content-Type', contentType)
             }
         }

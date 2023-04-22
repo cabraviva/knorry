@@ -195,6 +195,22 @@
                 const v = (await post('/json')).value
                 return v
             }).as('.post() #1 + JSON')
+
+            expect(async () => {
+                return (await post('/echo-json-data', {
+                    worked: true
+                }, {
+                    dataType: 'json'
+                })).$plain()
+            }).as('.post() with JSON Data')
+            expect(async () => {
+                return (await post('/echo-json-data', {
+                    worked: true
+                })).$plain()
+            }).as('.post() with JSON Data and no dataType set')
+            expect(async () => {
+                return (await post('/plain-post', 'TEST')).$plain()
+            }).as('.post() with Plain Text')
         }, 3000)
     </script>
 </body>

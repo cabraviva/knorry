@@ -38,5 +38,9 @@
     "puppeteer": "^19.9.0",
     "typescript": "^5.0.4",
     "uglify-js": "^3.17.4"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "connect-busboy": "^1.0.0"
   }
 }

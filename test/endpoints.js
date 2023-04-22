@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 import basicAuth from 'basic-auth'
+import busboy from 'connect-busboy'
+import bodyParser from 'body-parser'
 
 const USERNAME = 'gunnar'
 const PASSWORD = 'gneg'
@@ -27,6 +29,11 @@ const auth = (req, res, next) => {
 }
 
 export default function applyRoutes(app, fn = () => {}) {
+    app.use(bodyParser.json())
+    app.use(bodyParser.urlencoded({ extended: true }))
+    app.use(bodyParser.text())
+    app.use(busboy({ highWaterMark: 2 * 1024 * 1024 }))
+
     // Test json endpoint
     app.get('/jsonresp', (req, res) => {
         res.send({
@@ -68,6 +75,15 @@ export default function applyRoutes(app, fn = () => {}) {
     app.get('/textresp', (req, res) => {
         res.send('!!TEST_TEXT!!')
         fn()
+    })
+
+    app.post('/echo-json-data', (req, res) => {
+        const { worked } = req.body
+        res.json(worked)
+    })
+
+    app.post('/plain-post', (req, res) => {
+        res.json(req.body === 'TEST')
     })
 }
 
