@@ -1,5 +1,7 @@
 /* START TYPES */
 
+import { waitForDebugger } from "inspector"
+
 /**
  * Response from a http request, which is an object containing the $res property
  */
@@ -469,8 +471,14 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
                         }
                     } else {
                         if (!(data instanceof FormData || data instanceof URLSearchParams || data instanceof Blob)) {
-                            finalData = JSON.stringify(data)
-                            contentType = 'application/json; charset=utf8'
+                            if (typeof data === 'object') {
+                                finalData = JSON.stringify(data)
+                                contentType = 'application/json; charset=utf8'
+                            } else {
+                                // @ts-expect-error
+                                finalData = data
+                                contentType = 'text/plain; charset=utf8'
+                            }
                         } else {
                             // No hint, but instanceof supported type
                             finalData = data
