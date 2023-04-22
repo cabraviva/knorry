@@ -518,6 +518,10 @@ function post (url: string, data?: RequestData, options?: RequestOptions): Promi
     return execXHR('POST', true, url, options, data)
 }
 
+function put (url: string, data?: RequestData, options?: RequestOptions): Promise<KnorryResponse> {
+    return execXHR('PUT', true, url, options, data)
+}
+
 /**
  * Makes a request to the specified url
  * @param {HTTPMethod} method - The HTTP method to use for the request (e.g. GET, POST, PUT, DELETE,
@@ -542,6 +546,7 @@ export default async function knorry(method: HTTPMethod, url: string, data?: Req
             case 'OPTIONS':
                 break
             case 'PUT':
+                put(url, data, options).then(resolve).catch(reject)
                 break
             case 'DELETE':
                 break

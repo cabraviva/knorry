@@ -3,7 +3,7 @@
 - [X] GET
 - [ ] HEAD
 - [ ] OPTIONS
-- [ ] PUT
+- [X] PUT
 - [X] POST
 - [ ] DELETE
 - [ ] PATCH
