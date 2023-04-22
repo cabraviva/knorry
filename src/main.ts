@@ -1,7 +1,5 @@
 /* START TYPES */
 
-import { waitForDebugger } from "inspector"
-
 /**
  * Response from a http request, which is an object containing the $res property
  */
