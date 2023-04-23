@@ -399,8 +399,8 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
         var finalData: URLSearchParams | Blob | FormData | string | undefined | null = undefined
         if (sendData) {
             if (typeof data !== 'undefined' && data !== null) {
+                // debugger // Used to debug content type resolving
                 var contentType: string = 'text/plain'
-                // TODO: Detect Content Type
                 if (typeof (options.headers || {})['content-type'] === 'string') {
                     contentType = (options.headers || { 'content-type': 'text/plain' })['content-type']
                     if (contentType === 'application/json') {
@@ -482,6 +482,10 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
                             finalData = data
                             if (finalData instanceof Blob) {
                                 if (finalData.type) contentType = finalData.type
+                            } else if (finalData instanceof URLSearchParams) {
+                                contentType = 'application/x-www-form-urlencoded'
+                            } else {
+                                contentType = 'multipart/formdata'
                             }
                         }
                     }

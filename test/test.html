@@ -227,6 +227,18 @@
             expect(async () => {
                 return (await patch('/true')).$plain()
             }).as('.patch()')
+            expect(async () => {
+                return (await post('/echo-json-data', new URLSearchParams({
+                    worked: true
+                }))).$plain() === 'true'
+            }).as('.post() with new URLSearchParams()')
+            expect(async () => {
+                return (await post('/echo-json-data', {
+                    worked: true
+                }, {
+                    dataType: 'urlencoded'
+                })).$plain() === 'true'
+            }).as('.post() with implicit URLSearchParams()')
         }, 3000)
     </script>
 </body>
