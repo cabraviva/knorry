@@ -533,6 +533,17 @@ function head (url: string, options?: RequestOptions): Promise<KnorryResponse> {
 }
 
 /**
+ * Makes a delete request to the specified url
+ * @param {string} url - The URL to which the HTTP request will be sent.
+ * @param {RequestOptions} options - An optional object containing additional options for the
+ * request, such as headers
+ * @returns A Promise that resolves either with a primitive type containing the full response as the $res property or undefined
+ */
+function del(url: string, options?: RequestOptions): Promise<KnorryResponse> {
+    return execXHR('DELETE', false, url, options)
+}
+
+/**
  * Makes a post request to the specified url
  * @param {string} url - The URL to which the HTTP request will be sent.
  * @param {RequestData} data - The data to be sent in the request body when using a method like POST
@@ -553,6 +564,32 @@ function post (url: string, data?: RequestData, options?: RequestOptions): Promi
  * @returns A Promise that resolves either with a primitive type containing the full response as the $res property or undefined
  */
 function put (url: string, data?: RequestData, options?: RequestOptions): Promise<KnorryResponse> {
+    return execXHR('PUT', true, url, options, data)
+}
+
+/**
+ * Makes a options request to the specified url
+ * @param {string} url - The URL to which the HTTP request will be sent.
+ * @param {RequestData} data - The data to be sent in the request body when using a method like POST
+ * @param {RequestOptions} options - An optional object containing additional options for the
+ * request, such as headers
+ * @returns A Promise that resolves either with a primitive type containing the full response as the $res property or undefined
+ */
+function options(url: string, data?: RequestData, options?: RequestOptions): Promise<KnorryResponse> {
+    return execXHR('PUT', true, url, options, data)
+}
+
+var _options = options
+
+/**
+ * Makes a patch request to the specified url
+ * @param {string} url - The URL to which the HTTP request will be sent.
+ * @param {RequestData} data - The data to be sent in the request body when using a method like POST
+ * @param {RequestOptions} options - An optional object containing additional options for the
+ * request, such as headers
+ * @returns A Promise that resolves either with a primitive type containing the full response as the $res property or undefined
+ */
+function patch(url: string, data?: RequestData, options?: RequestOptions): Promise<KnorryResponse> {
     return execXHR('PUT', true, url, options, data)
 }
 
@@ -579,17 +616,16 @@ export default async function knorry(method: HTTPMethod, url: string, data?: Req
                 head(url, options).then(resolve).catch(reject)
                 break
             case 'OPTIONS':
+                _options(url, data, options).then(resolve).catch(reject)
                 break
             case 'PUT':
                 put(url, data, options).then(resolve).catch(reject)
                 break
             case 'DELETE':
+                del(url, options).then(resolve).catch(reject)
                 break
             case 'PATCH':
-                break
-            case 'CONNECT':
-                break
-            case 'TRACE':
+                patch(url, data, options).then(resolve).catch(reject)
                 break
             default:
                 throw new TypeError('method must be a valid HTTPMethod')
@@ -655,6 +691,9 @@ export {
     post,
     put,
     head,
+    del,
+    options,
+    patch,
     defineKnorryOptions,
     useFetch,
     knorry

@@ -2,13 +2,11 @@
 - [ ] Test Coverage
 - [X] GET
 - [X] HEAD
-- [ ] OPTIONS
+- [X] OPTIONS
 - [X] PUT
 - [X] POST
-- [ ] DELETE
-- [ ] PATCH
-- [ ] CONNECT
-- [ ] TRACE
+- [X] DELETE
+- [X] PATCH
 - [ ] optional errors
 - [ ] upload api (https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestUpload)
 - [ ] FormData (https://developer.mozilla.org/en-US/docs/Web/API/FormData)

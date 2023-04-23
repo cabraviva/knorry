@@ -22,7 +22,7 @@
 
     <script type="module">
         import * as knorryObj from './knorry.js'
-        import { get, defineKnorryOptions, post, useFetch, put, head } from './knorry.js'
+        import { get, defineKnorryOptions, post, useFetch, put, head, del, options, patch } from './knorry.js'
         import knorry from './knorry.js'
 
         expression(knorryObj.default === knorryObj.knorry).as('Default export')
@@ -218,6 +218,15 @@
             expect(async () => {
                 return (await put('/true')).$plain()
             }).as('.put()')
+            expect(async () => {
+                return (await del('/true')).$plain()
+            }).as('.del()')
+            expect(async () => {
+                return (await options('/true')).$plain()
+            }).as('.options()')
+            expect(async () => {
+                return (await patch('/true')).$plain()
+            }).as('.patch()')
         }, 3000)
     </script>
 </body>

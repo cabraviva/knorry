@@ -74,6 +74,15 @@ export default function applyRoutes(app, fn = () => {}) {
     app.put('/true', (req, res) => {
         res.json(true)
     })
+    app.delete('/true', (req, res) => {
+        res.json(true)
+    })
+    app.options('/true', (req, res) => {
+        res.json(true)
+    })
+    app.patch('/true', (req, res) => {
+        res.json(true)
+    })
     app.head('/true', (req, res) => res.end())
 
     // Plain text endpoint
