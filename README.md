@@ -58,8 +58,8 @@ This method is not recommended because it doesn't supports all features and you 
 ## Easy mode
 By default knorry will use easy mode, which you can disable like this:
 ```js
-import { defineKnorryConfig, get } from 'knorry'
-defineKnorryConfig({
+import { defineKnorryOptions, get } from 'knorry'
+defineKnorryOptions({
     easyMode: false
 })
 
