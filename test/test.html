@@ -239,6 +239,18 @@
                     dataType: 'urlencoded'
                 })).$plain() === 'true'
             }).as('.post() with implicit URLSearchParams()')
+            expect(async () => {
+                const f = new FormData()
+                f.append('worked', 'true')
+                return (await post('/echo-formdata', f)).worked === 'true'
+            }).as('.post() with new FormData()')
+            expect(async () => {
+                return (await post('/echo-formdata', {
+                    worked: true
+                }, {
+                    dataType: 'formdata'
+                })).worked === 'true'
+            }).as('.post() with implicit FormData()')
         }, 3000)
     </script>
 </body>

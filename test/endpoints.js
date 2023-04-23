@@ -1,6 +1,7 @@
 import path from 'path'
 import express from 'express'
 import esMain from 'es-main'
+import fs from 'fs'
 import { fileURLToPath } from 'node:url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -96,6 +97,48 @@ export default function applyRoutes(app, fn = () => {}) {
         res.json(worked)
     })
 
+    app.post('/echo-formdata', (req, res) => {
+        const data = {}
+
+        req.busboy.on('field', function (key, value) {
+            data[key] = value
+        })
+
+        req.busboy.on('file', (fieldname, file, filename) => {
+            return
+        })
+
+        req.busboy.on('finish', () => {
+            res.json(data)
+        })
+
+        req.pipe(req.busboy)
+    })
+
+    app.post('/upload-file', (req, res) => {
+        req.busboy.on('field', function (key, value) {
+
+        })
+
+        req.busboy.on('file', (fieldname, file, filename) => {
+                const fstream = fs.createWriteStream(path.join(__dirname, 'file.txt'))
+
+                file.pipe(fstream)
+
+                fstream.on('close', () => {
+                    console.log('Uploaded file')
+                })
+        })
+
+        req.busboy.on('finish', () => {
+            const fcontent = fs.readFileSync(path.join(__dirname, 'file.txt')).toString('utf8')
+            fs.rmSync(path.join(__dirname, 'file.txt'))
+            res.json(fcontent.includes('TRUE'))
+        })
+
+        req.pipe(req.busboy)
+    })
+
     app.post('/plain-post', (req, res) => {
         res.json(req.body === 'TEST')
     })
@@ -110,6 +153,9 @@ if (esMain(import.meta)) {
     })
     app.get('/knorry.js', (req, res) => {
         res.sendFile(path.join(__dirname, '..', 'dist', 'main.js'))
+    })
+    app.get('/main.js.map', (req, res) => {
+        res.sendFile(path.join(__dirname, '..', 'dist', 'main.js.map'))
     })
     app.listen(4560, () => {
         console.log('Server is listening!')

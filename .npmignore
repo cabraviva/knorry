@@ -1,6 +1,7 @@
 .dccache
 .gitattributes
 test/
+testf.txt
 src/
 .vscode
 TODOs.md

@@ -425,6 +425,7 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
                                 data.append(__a_key, oldData[__a_key])
                             }
                         }
+                        contentType = 'multipart/form-data'
                         // @ts-expect-error
                         finalData = data
                     } else {
@@ -440,6 +441,10 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
                         finalData = data
                         if (finalData instanceof Blob) {
                             if (finalData.type) contentType = finalData.type
+                        } else if (finalData instanceof URLSearchParams) {
+                            contentType = 'application/x-www-form-urlencoded'
+                        } else {
+                            contentType = 'multipart/form-data'
                         }
                     }
                 } else {
@@ -452,11 +457,12 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
                             for (var i = 0; i < __a_keys.length; i += 1) {
                                 var __a_key = __a_keys[i]
                                 // @ts-expect-error
-                                data.append(__a_key, oldData[__a_key])
+                                data.append(__a_key, _oldData[__a_key])
                             }
+                            contentType = 'multipart/form-data'
                             // @ts-expect-error
                             finalData = data
-                            contentType = 'multipart/formdata'
+                            contentType = 'multipart/form-data'
                         } else if (options.dataType === 'json') {
                             contentType = 'application/json; charset=utf8'
                             finalData = JSON.stringify(data)
@@ -485,7 +491,7 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
                             } else if (finalData instanceof URLSearchParams) {
                                 contentType = 'application/x-www-form-urlencoded'
                             } else {
-                                contentType = 'multipart/formdata'
+                                contentType = 'multipart/form-data'
                             }
                         }
                     }
@@ -494,7 +500,8 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
                     data = JSON.stringify(data)
                     contentType = 'application/json; charset=utf8'
                 }
-                xhr.setRequestHeader('Content-Type', contentType)
+                
+                if (contentType !== 'multipart/form-data') xhr.setRequestHeader('Content-Type', contentType)
             }
         }
 
