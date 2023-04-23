@@ -9,12 +9,14 @@
 <body>
     <script type="module">
         import * as knorryObj from './knorry.js'
-        import { get, post, defineKnorryOptions, useFetch } from './knorry.js'
+        import { get, post, defineKnorryOptions, useFetch, put, head } from './knorry.js'
         import knorry from './knorry.js'
         window.knorryObj = knorryObj
         window.knorry = knorry
         window.get = get
         window.post = post
+        window.put = put
+        window.head = head
         window.defineKnorryOptions = defineKnorryOptions
         window.useFetch = useFetch
     </script>

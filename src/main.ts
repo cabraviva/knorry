@@ -510,14 +510,48 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
     })
 }
 
+/**
+ * Makes a get request to the specified url
+ * @param {string} url - The URL to which the HTTP request will be sent.
+ * @param {RequestOptions} options - An optional object containing additional options for the
+ * request, such as headers
+ * @returns A Promise that resolves either with a primitive type containing the full response as the $res property or undefined
+ */
 function get (url: string, options?: RequestOptions): Promise<KnorryResponse> {
     return execXHR('GET', false, url, options)
 }
 
+/**
+ * Makes a head request to the specified url
+ * @param {string} url - The URL to which the HTTP request will be sent.
+ * @param {RequestOptions} options - An optional object containing additional options for the
+ * request, such as headers
+ * @returns A Promise that resolves either with a primitive type containing the full response as the $res property or undefined
+ */
+function head (url: string, options?: RequestOptions): Promise<KnorryResponse> {
+    return execXHR('HEAD' , false, url, options)
+}
+
+/**
+ * Makes a post request to the specified url
+ * @param {string} url - The URL to which the HTTP request will be sent.
+ * @param {RequestData} data - The data to be sent in the request body when using a method like POST
+ * @param {RequestOptions} options - An optional object containing additional options for the
+ * request, such as headers
+ * @returns A Promise that resolves either with a primitive type containing the full response as the $res property or undefined
+ */
 function post (url: string, data?: RequestData, options?: RequestOptions): Promise<KnorryResponse> {
     return execXHR('POST', true, url, options, data)
 }
 
+/**
+ * Makes a put request to the specified url
+ * @param {string} url - The URL to which the HTTP request will be sent.
+ * @param {RequestData} data - The data to be sent in the request body when using a method like POST
+ * @param {RequestOptions} options - An optional object containing additional options for the
+ * request, such as headers
+ * @returns A Promise that resolves either with a primitive type containing the full response as the $res property or undefined
+ */
 function put (url: string, data?: RequestData, options?: RequestOptions): Promise<KnorryResponse> {
     return execXHR('PUT', true, url, options, data)
 }
@@ -542,6 +576,7 @@ export default async function knorry(method: HTTPMethod, url: string, data?: Req
                 post(url, data, options).then(resolve).catch(reject)
                 break
             case 'HEAD':
+                head(url, options).then(resolve).catch(reject)
                 break
             case 'OPTIONS':
                 break
@@ -618,6 +653,8 @@ function useFetch (fetchFunction: Function): void {
 export {
     get,
     post,
+    put,
+    head,
     defineKnorryOptions,
     useFetch,
     knorry

@@ -71,6 +71,11 @@ export default function applyRoutes(app, fn = () => {}) {
         fn()
     })
 
+    app.put('/true', (req, res) => {
+        res.json(true)
+    })
+    app.head('/true', (req, res) => res.end())
+
     // Plain text endpoint
     app.get('/textresp', (req, res) => {
         res.send('!!TEST_TEXT!!')

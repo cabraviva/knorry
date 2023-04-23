@@ -1,7 +1,7 @@
 - [ ] Tests
 - [ ] Test Coverage
 - [X] GET
-- [ ] HEAD
+- [X] HEAD
 - [ ] OPTIONS
 - [X] PUT
 - [X] POST

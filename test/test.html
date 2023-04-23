@@ -22,7 +22,7 @@
 
     <script type="module">
         import * as knorryObj from './knorry.js'
-        import { get, defineKnorryOptions, post, useFetch } from './knorry.js'
+        import { get, defineKnorryOptions, post, useFetch, put, head } from './knorry.js'
         import knorry from './knorry.js'
 
         expression(knorryObj.default === knorryObj.knorry).as('Default export')
@@ -211,6 +211,13 @@
             expect(async () => {
                 return (await post('/plain-post', 'TEST')).$plain()
             }).as('.post() with Plain Text')
+            expect(async () => {
+                const res = await head('/true')
+                return res.status === 200
+            }).as('.head()')
+            expect(async () => {
+                return (await put('/true')).$plain()
+            }).as('.put()')
         }, 3000)
     </script>
 </body>
