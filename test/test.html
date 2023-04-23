@@ -252,6 +252,20 @@
                 })).worked === 'true'
             }).as('.post() with implicit FormData()')
             // TODO: Test file upload using formData
+            /*
+                Like this i guess?!
+                (async () => {
+                  const browser = await puppeteer.launch();
+                  const page = await browser.newPage();
+
+                  await page.goto('http://example.com');
+
+                  const fileInput = await page.$('input[type="file"]');
+                  await fileInput.uploadFile('/path/to/testf.txt');
+
+                  await browser.close();
+                })();
+            */
         }, 3000)
     </script>
 </body>
