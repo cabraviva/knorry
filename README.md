@@ -64,7 +64,9 @@ First, import all methods you need:
 import { get, post } from 'knorry'
 ```
 
-Now you can make requests like this
+Now you can make requests like this:
+```js
+```
 
 Alternatively you could use the default export:
 ```js
