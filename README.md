@@ -32,6 +32,9 @@ npm i -D knorry
 ```
 No additional configuration required
 
+<details>
+<summary>CDN & Node</summary>
+
 **Using a CDN (Not recommended):**
 ```javascript
 const knorry = (await import('https://cdn.jsdelivr.net/npm/knorry@latest')).default
@@ -53,6 +56,27 @@ defineKnorryOptions({
 })
 ```
 This method is not recommended because it doesn't supports all features and you aren't in need of a lightweight client in nodejs. Use a more robust client like [axios](https://npmjs.com/package/axios) instead
+</details>
+
+# Usage
+First, import all methods you need:
+```js
+import { get, post } from 'knorry'
+```
+
+Now you can make requests like this
+
+Alternatively you could use the default export:
+```js
+import knorry from 'knorry'
+knorry('POST', 'example.com', {
+    key: 'value'
+}, {
+    headers: {
+        myHeader: '12345'
+    }
+})
+```
 
 # Some things to keep in mind when using knorry
 ## Easy mode
@@ -111,3 +135,5 @@ await get('/whoami') == 'username'
 await get('/whoami') instanceof String
 !!(await get('/returns-false')).$plain() // -> false
 ```
+
+If you are working on an enterprise project, you should disable easyMode by default.

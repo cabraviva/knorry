@@ -6,10 +6,11 @@
   "types": "dist/main.d.ts",
   "type": "module",
   "scripts": {
+    "docs": "typedoc --out docs --entryPointStrategy expand src",
     "test": "tsc && node test/test.js",
     "playground": "tsc && node test/endpoints.js",
     "build": "tsc && uglifyjs -o dist/main.js --compress --mangle -- dist/main.js",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build && npm run docs"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,7 @@
     "es-main": "^1.2.0",
     "express": "^4.18.2",
     "puppeteer": "^19.9.0",
+    "typedoc": "^0.24.6",
     "typescript": "^5.0.4",
     "uglify-js": "^3.17.4"
   },

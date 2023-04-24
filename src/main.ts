@@ -2,8 +2,9 @@
 
 /**
  * Response from a http request, which is an object containing the $res property
+
  */
-interface JSONObject {
+export interface JSONObject {
     /**
      * This will include the complete response without pretending to be a different type
      */
@@ -17,8 +18,9 @@ interface JSONObject {
 
 /**
  * Response from a http request. Acts & can be used like a number including the data
+
  */
-interface NumberResponse extends Number, KnorryResponseObj {
+export interface NumberResponse extends Number, KnorryResponseObj {
     /**
      * This will include the complete response without pretending to be a different type
      */
@@ -31,8 +33,9 @@ interface NumberResponse extends Number, KnorryResponseObj {
 
 /**
  * Response from a http request. Acts & can be used like an array including the data
+
  */
-interface ArrayResponse extends Array<any> {
+export interface ArrayResponse extends Array<any> {
     /**
      * This will include the complete response without pretending to be a different type
      */
@@ -48,10 +51,14 @@ interface ArrayResponse extends Array<any> {
  * It indicates that any valid JSON value will be returned
  * The $res property will be available to access the full response
  * If undefined no $res property will be available
- */
-type JSONData = PlainTextResponse | JSONObject | NumberResponse | undefined | ArrayResponse
 
-interface KnorryResponseObj {
+ */
+export type JSONData = PlainTextResponse | JSONObject | NumberResponse | undefined | ArrayResponse
+
+/**
+
+ */
+export interface KnorryResponseObj {
     /**
      * Specifies if there was an error produced by the client (knorry)
      */
@@ -105,8 +112,9 @@ interface AnyObject {
 
 /**
  * Response from a http request. Acts & can be used like a string including the data
+
  */
-interface PlainTextResponse extends String, KnorryResponseObj {
+export interface PlainTextResponse extends String, KnorryResponseObj {
     /**
      * This will include the complete response without pretending to be a different type
      */
@@ -119,8 +127,9 @@ interface PlainTextResponse extends String, KnorryResponseObj {
 
 /**
  * Response from a http request. Acts & can be used like a boolean including the data
+
  */
-interface BooleanResponse extends Boolean, KnorryResponseObj {
+export interface BooleanResponse extends Boolean, KnorryResponseObj {
     /**
      * This will include the complete response without pretending to be a different type
      */
@@ -139,16 +148,21 @@ interface GlobalThis extends Global, Window {
 
 /**
  * Response from a http request. Can either be a string or any valid JSON type
- */
-type KnorryResponse = KnorryResponseObj | PlainTextResponse | JSONObject | NumberResponse | undefined | ArrayResponse | BooleanResponse
 
-type RequestData = URLSearchParams | Blob | FormData | Object | null | undefined | string | boolean | number
+ */
+export type KnorryResponse = KnorryResponseObj | PlainTextResponse | JSONObject | NumberResponse | undefined | ArrayResponse | BooleanResponse
+
+/**
+
+ */
+export type RequestData = URLSearchParams | Blob | FormData | Object | null | undefined | string | boolean | number
 
 /**
  * Here you can provide request options including headers.
  * If you want to set some options globally, use defineKnorryOptions({ ... })
+
  */
-interface RequestOptions {
+export interface RequestOptions {
     /**
      * Gives knorry a hint on which type of data you want to send.
      * Not necessary but recommended.
@@ -245,7 +259,10 @@ interface RequestOptions {
     easyMode?: boolean
 }
 
-type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATCH' | 'CONNECT' | 'TRACE'
+/**
+
+ */
+export type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATCH'
 
 /* END TYPES */
 
