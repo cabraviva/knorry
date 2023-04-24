@@ -1,4 +1,4 @@
-![Knorry](/logo.jpg)
+![Knorry](https://raw.githubusercontent.com/greencoder001/knorry/main/logo.jpg)
 
 <center align="center">
 
