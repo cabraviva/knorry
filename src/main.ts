@@ -214,6 +214,29 @@ interface RequestOptions {
         username?: string | null,
         password?: string | null
     },
+
+    /**
+     * Here you can optionally provide event handlers fo file uploads
+     */
+    upload?: {
+        /**
+         * An event handler function which is called at the beginning of a file upload
+         * @param total Total file size in bytes
+         */
+        start?(total: number): void,
+        /**
+         * An event handler function which is called everytime upload progress was made
+         * @param percentage A number between 0 and 1 indicating how much progress was already made
+         * @param loaded Already uploaded bytes
+         * @param total Total file size in bytes
+         */
+        progress?(percentage: number, loaded: number, total: number): void,
+        /**
+         * An event handler function which is called at the end of a file upload
+         * @param success Indicates whether the upload was sucessful or not
+         */
+        end?(success: boolean): void
+    }
 }
 
 type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATCH' | 'CONNECT' | 'TRACE'
@@ -369,6 +392,34 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
 
             resolve(response)
         })
+
+        // Upload API
+        if (typeof options.upload === 'object') {
+            if (typeof options.upload.start === 'function') {
+                xhr.upload.addEventListener('loadstart', (ev) => {
+                    if (ev.lengthComputable) {
+                        // @ts-expect-error: No it's not
+                        options.upload.start(ev.total)
+                    }
+                })
+            }
+
+            if (typeof options.upload.progress === 'function') {
+                xhr.upload.addEventListener('progress', (ev) => {
+                    if (ev.lengthComputable) {
+                        // @ts-expect-error: No it's not
+                        options.upload.progress(ev.loaded / ev.total, ev.loaded, ev.total)
+                    }
+                })
+            }
+
+            if (typeof options.upload.end === 'function') {
+                xhr.upload.addEventListener('loadend', (ev) => {
+                    // @ts-expect-error: No it's not
+                    options.upload.end(ev.loaded !== 0)
+                })
+            }
+        }
 
         // Open request
         xhr.open(method, url, true)

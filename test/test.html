@@ -20,6 +20,10 @@
 
     <script src="./test-engine.js"></script>
 
+    <form>
+        <input type="file" name="file" id="file">
+    </form>
+
     <script type="module">
         import * as knorryObj from './knorry.js'
         import { get, defineKnorryOptions, post, useFetch, put, head, del, options, patch } from './knorry.js'
@@ -252,20 +256,39 @@
                 })).worked === 'true'
             }).as('.post() with implicit FormData()')
             // TODO: Test file upload using formData
-            /*
-                Like this i guess?!
-                (async () => {
-                  const browser = await puppeteer.launch();
-                  const page = await browser.newPage();
+            setTimeout(async () => {
+                expect(async () => {
+                    const formData = new FormData()
+                    formData.append('file', document.querySelector('input[name="file"]').files[0])
+                    const result = (await post('/upload-file', formData)).$plain()
 
-                  await page.goto('http://example.com');
+                    expect(async () => {
+                        const formData = new FormData()
+                        formData.append('file', document.querySelector('input[name="file"]').files[0])
+                        let sfc = false
+                        let pfc = false
+                        let efc = false
 
-                  const fileInput = await page.$('input[type="file"]');
-                  await fileInput.uploadFile('/path/to/testf.txt');
+                        const req = await post('/upload-file', formData, {
+                            upload: {
+                                start: (totalFileSize) => {
+                                    sfc = !!totalFileSize
+                                },
+                                progress: (percentage, loaded, total) => {
+                                    pfc = percentage > 0.1
+                                },
+                                end: (success) => {
+                                    efc = success
+                                }
+                            }
+                        })
 
-                  await browser.close();
-                })();
-            */
+                        return req.$plain() && sfc && pfc && efc
+                    }).as('FormData File upload with Upload Features')
+
+                    return result
+                }).as('FormData File upload')
+            }, 1000)
         }, 3000)
     </script>
 </body>

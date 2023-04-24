@@ -1,5 +1,4 @@
 - [ ] Tests
-- [ ] Test Coverage
 - [X] GET
 - [X] HEAD
 - [X] OPTIONS
@@ -7,9 +6,8 @@
 - [X] POST
 - [X] DELETE
 - [X] PATCH
-- [ ] optional errors
-- [ ] upload api (https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestUpload)
-- [ ] FormData (https://developer.mozilla.org/en-US/docs/Web/API/FormData)
+- [X] upload api (https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestUpload)
+- [X] FormData (https://developer.mozilla.org/en-US/docs/Web/API/FormData)
 - [ ] Fetch support
-- [ ] Data (req.body)
+- [X] Data (req.body)
 - [ ] options.easyMode -> doesn't pretend to be a primitive

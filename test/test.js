@@ -67,6 +67,8 @@ app.listen(4560, async () => {
     })
     const page = await browser.newPage()
     await page.goto(`http://localhost:4560`)
+    const fileInput = await page.$('input[type="file"]')
+    await fileInput.uploadFile(path.join(__dirname, '..', 'testf.txt'))
 
     global.printFullLogs = async () => {
         console.log(chalk.cyan('Full log:'))

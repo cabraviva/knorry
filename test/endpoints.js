@@ -127,13 +127,16 @@ export default function applyRoutes(app, fn = () => {}) {
 
                 fstream.on('close', () => {
                     console.log('Uploaded file')
+                    const fcontent = fs.readFileSync(path.join(__dirname, 'file.txt'), {
+                        encoding: 'utf8'
+                    })
+                    fs.rmSync(path.join(__dirname, 'file.txt'))
+                    res.json(fcontent.includes('TRUE'))
                 })
         })
 
         req.busboy.on('finish', () => {
-            const fcontent = fs.readFileSync(path.join(__dirname, 'file.txt')).toString('utf8')
-            fs.rmSync(path.join(__dirname, 'file.txt'))
-            res.json(fcontent.includes('TRUE'))
+            
         })
 
         req.pipe(req.busboy)
