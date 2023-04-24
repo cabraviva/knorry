@@ -66,6 +66,9 @@ import { get, post } from 'knorry'
 
 Now you can make requests like this:
 ```js
+const res = await get('example-api.com')
+console.log(res.$plain())
+// res -> String { 'response', $res: ... }
 ```
 
 Alternatively you could use the default export:
@@ -79,6 +82,9 @@ knorry('POST', 'example.com', {
     }
 })
 ```
+
+# Docs
+If you want to see a full documentation take a look at [this](https://greencoder001.github.io/knorry/)
 
 # Some things to keep in mind when using knorry
 ## Easy mode
