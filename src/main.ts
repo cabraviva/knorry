@@ -140,7 +140,7 @@ interface GlobalThis extends Global, Window {
 /**
  * Response from a http request. Can either be a string or any valid JSON type
  */
-type KnorryResponse = PlainTextResponse | JSONObject | NumberResponse | undefined | ArrayResponse | BooleanResponse
+type KnorryResponse = KnorryResponseObj | PlainTextResponse | JSONObject | NumberResponse | undefined | ArrayResponse | BooleanResponse
 
 type RequestData = URLSearchParams | Blob | FormData | Object | null | undefined | string | boolean | number
 
@@ -153,7 +153,7 @@ interface RequestOptions {
      * Gives knorry a hint on which type of data you want to send.
      * Not necessary but recommended.
      * If data is a plain Object and no instance of FormData, URLSearchParams or
-     * Blob this is required
+     * Blob this will default to 'json'
      * @default 'text'
      */
     dataType?: 'json' | 'text' | 'formdata' | 'urlencoded'
@@ -236,61 +236,76 @@ interface RequestOptions {
          * @param success Indicates whether the upload was sucessful or not
          */
         end?(success: boolean): void
-    }
+    },
+
+    /**
+     * Indicates wether the response should be an response object or an extended primitive type
+     * @default true
+     */
+    easyMode?: boolean
 }
 
 type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATCH' | 'CONNECT' | 'TRACE'
 
 /* END TYPES */
 
-/* @__PURE__ */ function createKnorryResponse (obj: KnorryResponseObj): KnorryResponse {
-    // @ts-expect-error
-    var ret: KnorryResponse = { $res: obj }
+/* @__PURE__ */ function createKnorryResponse (obj: KnorryResponseObj, easyMode: boolean): KnorryResponse {
+    if (easyMode) {
+        // @ts-expect-error
+        var ret: KnorryResponse = { $res: obj }
 
-    if (typeof obj.data === 'undefined') {
-        return undefined
-    } else if (typeof obj.data === 'string') {
-        // @ts-expect-error: Properties will be added below
-        ret = new String(obj.data)
-        var keys: Array<any> = Object.keys(obj)
-        for (var i: number = 0; i < keys.length; i += 1) {
-            // @ts-expect-error: We will write to the string anyways
-            ret[keys[i]] = obj[keys[i]]
+        if (typeof obj.data === 'undefined') {
+            return undefined
+        } else if (typeof obj.data === 'string') {
+            // @ts-expect-error: Properties will be added below
+            ret = new String(obj.data)
+            var keys: Array<any> = Object.keys(obj)
+            for (var i: number = 0; i < keys.length; i += 1) {
+                // @ts-expect-error: We will write to the string anyways
+                ret[keys[i]] = obj[keys[i]]
+            }
+            // @ts-expect-error No worries, it won't be undefined
+            ret.$res = obj
+        } else if (typeof obj.data === 'number') {
+            // @ts-expect-error: Properties will be added below
+            ret = new Number(obj.data)
+            var keys: Array<any> = Object.keys(obj)
+            for (var i: number = 0; i < keys.length; i += 1) {
+                // @ts-expect-error: We will write to the number anyways
+                ret[keys[i]] = obj[keys[i]]
+            }
+            // @ts-expect-error No worries, it won't be undefined
+            ret.$res = obj
+        } else if (typeof obj.data === 'boolean') {
+            // @ts-expect-error: Properties will be added below
+            ret = new Boolean(obj.data)
+            var keys: Array<any> = Object.keys(obj)
+            for (var i: number = 0; i < keys.length; i += 1) {
+                // @ts-expect-error: We will write to it anyways
+                ret[keys[i]] = obj[keys[i]]
+            }
+            // @ts-expect-error No worries, it won't be undefined
+            ret.$res = obj
+        } else {
+            // Object or Array
+            ret = obj.data
+            // @ts-expect-error
+            ret.$res = obj
         }
-        // @ts-expect-error No worries, it won't be undefined
-        ret.$res = obj
-    } else if (typeof obj.data === 'number') {
-        // @ts-expect-error: Properties will be added below
-        ret = new Number(obj.data)
-        var keys: Array<any> = Object.keys(obj)
-        for (var i: number = 0; i < keys.length; i += 1) {
-            // @ts-expect-error: We will write to the number anyways
-            ret[keys[i]] = obj[keys[i]]
+
+        // @ts-expect-error: It's not
+        ret.$plain = function () {
+            return obj.data
         }
-        // @ts-expect-error No worries, it won't be undefined
-        ret.$res = obj
-    } else if (typeof obj.data === 'boolean') {
-        // @ts-expect-error: Properties will be added below
-        ret = new Boolean(obj.data)
-        var keys: Array<any> = Object.keys(obj)
-        for (var i: number = 0; i < keys.length; i += 1) {
-            // @ts-expect-error: We will write to it anyways
-            ret[keys[i]] = obj[keys[i]]
-        }
-        // @ts-expect-error No worries, it won't be undefined
-        ret.$res = obj
+
+        return ret
     } else {
-        // Object or Array
-        ret = obj.data
-        ret.$res = obj
+        // @ts-expect-error
+        obj.$plain = function () {
+            return obj.data
+        }
+        return obj
     }
-
-    // @ts-expect-error: It's not
-    ret.$plain = function () {
-        return obj.data
-    }
-
-    return ret
 }
 
 /* @__PURE__ */ function parseResponseHeaders(headersString: string): Record<string, string> {
@@ -379,6 +394,12 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
 
 
             // Create response
+            var em = true
+            if (typeof (options || {}).easyMode === 'boolean') {
+                // @ts-expect-error
+                em = (options || {}).easyMode
+            }
+
             response = createKnorryResponse({
                 knorryError: false,
                 data,
@@ -388,7 +409,7 @@ type HTTPMethod = 'GET' | 'POST' | 'HEAD' | 'OPTIONS' | 'PUT' | 'DELETE' | 'PATC
                 serverError: xhr.status >= 500 && xhr.status < 600,
                 successful: xhr.status >= 200 && xhr.status < 300,
                 clientError: xhr.status >= 400 && xhr.status < 500
-            })
+            }, em)
 
             resolve(response)
         })
@@ -738,16 +759,6 @@ function defineKnorryOptions (options: RequestOptions): void {
     glb.__knorry__.options = mergeObject(glb.__knorry__.options, options)
 }
 
-function useFetch (fetchFunction: Function): void {
-    function XHR () {
-        // TODO: Create a wrapper for XHR that uses fetch
-    }
-    
-    defineKnorryOptions({
-        XHRClass: XHR
-    })
-}
-
 export {
     get,
     post,
@@ -757,6 +768,5 @@ export {
     options,
     patch,
     defineKnorryOptions,
-    useFetch,
     knorry
 }
