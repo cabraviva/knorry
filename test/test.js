@@ -63,7 +63,10 @@ app.listen(4560, async () => {
     // Run tests
     const browser = await puppeteer.launch({
         headless: true,
-        slowMo: 0
+        slowMo: 0,
+        args: [
+            '--no-sandbox'
+        ]
     })
     const page = await browser.newPage()
     await page.goto(`http://localhost:4560`)
