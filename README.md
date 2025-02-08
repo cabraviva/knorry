@@ -84,7 +84,7 @@ knorry('POST', 'example.com', {
 ```
 
 # Docs
-If you want to see a full documentation take a look at [this](https://greencoder001.github.io/knorry/)
+If you want to see a full documentation take a look at [this](https://cabraviva.github.io/knorry/)
 
 # Some things to keep in mind when using knorry
 ## Easy mode
